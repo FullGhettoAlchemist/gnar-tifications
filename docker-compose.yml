@@ -4,11 +4,15 @@ version: '2' # specify docker-compose version
 services:
   angular: # name of the first service
     build: gnar-app # specify the directory of the Dockerfile
+    volumes:
+      - ./gnar-app:/usr/src/app
     ports:
       - "4200:4200" # specify port forewarding
 
   express: #name of the second service
-    build: gnar-server # specify the directory of the Dockerfile
+    build: gnar-api # specify the directory of the Dockerfile
+    volumes:
+      - ./gnar-api:/usr/src/app
     ports:
       - "3000:3000" #specify ports forewarding
 
