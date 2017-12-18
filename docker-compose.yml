@@ -18,6 +18,8 @@ services:
       - nexmo-secret
     ports:
       - "3000:3000" #specify ports forewarding
+    links:
+      - database # link this service to the database service
 
   database: # name of the third service
     image: mongo # specify image to build container from
