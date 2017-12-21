@@ -4,6 +4,9 @@ const path = require('path');
 const http = require('http');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const crawler = require('./crawler')
+//get internal dependencies
+//import Crawler from './crawler';
 
 // Get our API routes
 // const api = require('./routes/api');
@@ -28,6 +31,11 @@ app.set('port', port);
  */
 const server = http.createServer(app);
 
+
+
+// do stuff
+let my_crawler = new crawler();
+my_crawler.crawl();
 /**
  * Listen on provided port, on all network interfaces.
  */
