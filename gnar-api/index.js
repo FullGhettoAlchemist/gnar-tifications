@@ -34,8 +34,7 @@ const server = http.createServer(app);
 
 
 // do stuff
-let my_crawler = new crawler();
-my_crawler.crawl();
+crawler.crawl();
 /**
  * Listen on provided port, on all network interfaces.
  */
