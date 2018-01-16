@@ -12,5 +12,16 @@ module.exports.crawl = function(){
     //   console.log(thing);
     // }
     console.log(divs);
+    liftStatus(divs);
   });
+}
+
+function liftStatus(status){
+  if (status === 'icon-status-open'){
+    // Nexmo stuff here
+    console.log('its open.');
+  }
+  // else{
+  //   console.log('its closed.');
+  // }
 }
