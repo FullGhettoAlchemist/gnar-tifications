@@ -5,7 +5,6 @@ require('./server');
 const crawler = require('./crawler');
 const cron = require('cron').CronJob;
 
-
 /*
 * Runs every day (Monday through Sunday)
 * at 9:00:00 AM.
