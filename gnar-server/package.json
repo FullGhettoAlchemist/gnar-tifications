@@ -1,11 +1,11 @@
 {
-  "name": "gnar-api",
+  "name": "gnar-server",
   "version": "1.0.0",
-  "description": "api for powering the gnar ecosystem",
+  "description": "server for powering the gnar ecosystem",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "node ignition.js"
   },
   "author": "",
   "license": "ISC",

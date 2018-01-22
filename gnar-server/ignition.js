@@ -2,7 +2,7 @@ const forever = require('forever-monitor');
  
 let gnar = new (forever.Monitor)('./index.js', {
 	max: 3,
-	silent: true,
+	silent: false,
 	args: []
 });
 

@@ -1,8 +1,8 @@
 // Get external dependencies
 // const mongoose = require('mongoose');
 // Get internal dependencies
-require('./server');
 const crawler = require('./crawler');
+const api = require('./api');
 const cron = require('cron').CronJob;
 
 /*

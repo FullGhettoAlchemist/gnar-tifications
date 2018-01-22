@@ -10,9 +10,9 @@ services:
       - "4200:4200" # specify port forewarding
 
   express: #name of the second service
-    build: gnar-api # specify the directory of the Dockerfile
+    build: gnar-server # specify the directory of the Dockerfile
     volumes:
-      - ./gnar-api:/usr/src/app
+      - ./gnar-server:/usr/src/app
     secrets:
       - nexmo-key
       - nexmo-secret
