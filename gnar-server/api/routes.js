@@ -2,10 +2,18 @@
 const express = require('express');
 const router = express.Router();
 // Import internal dependencies
-const { User } = require('../database');
+const { Connector, User } = require('../database');
 
 /* GET api listing. */
 router.get('/', (req, res) => {
+    let connection = new Connector();
+    connection.connect()
+        .then(function(result) {
+            console.log(result);
+        }, function(err) {
+            console.log(err);
+        });
+
     res.send('api works');
 });
 
