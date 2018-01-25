@@ -2,12 +2,12 @@ version: '3.1' # specify docker-compose version
 
 # Define the services/containers to be run
 services:
-  angular: # name of the first service
-    build: gnar-app # specify the directory of the Dockerfile
-    volumes:
-      - ./gnar-app:/usr/src/app
-    ports:
-      - "4200:4200" # specify port forewarding
+  # angular: # name of the first service
+  #   build: gnar-app # specify the directory of the Dockerfile
+  #   volumes:
+  #     - ./gnar-app:/usr/src/app
+  #   ports:
+  #     - "4200:4200" # specify port forewarding
 
   express: #name of the second service
     build: gnar-server # specify the directory of the Dockerfile
@@ -16,18 +16,24 @@ services:
     secrets:
       - nexmo-key
       - nexmo-secret
+      - mongo-user
+      - mongo-password
     ports:
       - "3000:3000" #specify ports forewarding
-    links:
-      - database # link this service to the database service
+    # links:
+    #   - database # link this service to the database service
 
-  database: # name of the third service
-    image: mongo # specify image to build container from
-    ports:
-      - "27017:27017" # specify port forewarding
+  # database: # name of the third service
+  #   image: mongo # specify image to build container from
+  #   ports:
+  #     - "27017:27017" # specify port forewarding
 
 secrets:
   nexmo-key:
     file: /gnar_conf/.secrets/NEXMO_KEY
   nexmo-secret:
     file: /gnar_conf/.secrets/NEXMO_SECRET
+  mongo-user:
+    file: /gnar_conf/.secrets/MONGO_USER
+  mongo-password:
+    file: /gnar_conf/.secrets/MONGO_PASSWORD
