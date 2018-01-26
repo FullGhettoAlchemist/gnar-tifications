@@ -1,5 +1,6 @@
 // Import dependencies
 const fs = require('fs');
+const moment = require('moment');
 const mongoose = require('mongoose');
 const MongoClient = require('mongodb').MongoClient;
 
@@ -9,6 +10,8 @@ const MONGO_PASSWORD = fs.readFileSync('/run/secrets/mongo-password', 'utf-8').r
 class Connector {
 	constructor(){
 		this.uri = `mongodb://${MONGO_USER}:${MONGO_PASSWORD}@gnarcluster-shard-00-00-3cdig.mongodb.net:27017,gnarcluster-shard-00-01-3cdig.mongodb.net:27017,gnarcluster-shard-00-02-3cdig.mongodb.net:27017/test?ssl=true&replicaSet=GnarCluster-shard-0&authSource=admin`;
+		this.database = 'test';
+		// this.database = 'production';
 	}
 
 	connect(){
@@ -25,21 +28,21 @@ class Connector {
 	}
 }
 
-// create mongoose schema
-let userSchema = new mongoose.Schema({
-	name   : String,
-	number : {type: Number, required: true, unique: true },
-	email  : String
-});
+class User {
+	constructor(name,number,email){
+		this.name = name;
+		this._id = number;
+		this.email = email;
+	}
+}
 
-let alertSchema = new mongoose.Schema({
-	number  : {type: Number, required: true, unique: true },
-	alerted : Boolean
-});
-
-// create mongoose model
-const User = mongoose.model('User', userSchema);
-const Alert = mongoose.model('Alert', alertSchema);
-
+class Alert {
+	constructor(number){
+		this.number = number;
+		this.date = moment().format('MMDDYYYY');
+		this._id = `${this.number}_${this.date}`;
+		this.alerted = false;
+	}
+}
 
 module.exports = { Connector, User, Alert };
