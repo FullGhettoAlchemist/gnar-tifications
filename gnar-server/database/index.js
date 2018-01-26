@@ -41,7 +41,6 @@ class Alert {
 		this.number = number;
 		this.date = moment().format('MMDDYYYY');
 		this._id = `${this.number}_${this.date}`;
-		this.alerted = false;
 	}
 }
 

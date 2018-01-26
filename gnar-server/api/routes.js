@@ -89,7 +89,7 @@ router.get('/alerts/today', (req, res) => {
         .then( (db) => {
             let dbo = db.db(connection.database);
             const collection = dbo.collection('alerts');
-            collection.find({ date: moment().format('MMDDYYYY'), alerted:false }).toArray( (err, items) => {
+            collection.find({ date: moment().format('MMDDYYYY') }).toArray( (err, items) => {
                 res.send(items);
                 db.close();
             });
