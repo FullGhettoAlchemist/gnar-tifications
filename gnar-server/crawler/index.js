@@ -1,5 +1,6 @@
 const request = require("request");
 const fs = require('fs');
+const redis = require('redis');
 const cheerio = require("cheerio");
 const Nexmo = require('nexmo');
 
@@ -9,6 +10,12 @@ const NEXMO_OPTIONS = { debug: false };
 const NEXMO_FROM = '13027224120';
 const NEXMO_TO = '+14068616935';
 const NEXMO_TEXT = 'A text message sent using the Nexmo SMS API';
+
+// todo make use of redis for storing lift states
+var client = redis.createClient('6379', 'redis');
+client.on('error', (error) => {
+  console.log('error connecting to the redis client');
+});
 
 let nexmo = new Nexmo({
   apiKey: NEXMO_API_KEY,
