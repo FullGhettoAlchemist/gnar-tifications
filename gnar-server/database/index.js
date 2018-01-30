@@ -1,7 +1,6 @@
 // Import dependencies
 const fs = require('fs');
 const moment = require('moment');
-const mongoose = require('mongoose');
 const MongoClient = require('mongodb').MongoClient;
 
 const MONGO_USER = fs.readFileSync('/run/secrets/mongo-user', 'utf-8').replace(/(\r\n|\n|\r)/gm,"");

@@ -1,46 +1,21 @@
 // Get external dependencies
-// const mongoose = require('mongoose');
 // Get internal dependencies
 const crawler = require('./crawler');
 const api = require('./api');
 const cron = require('cron').CronJob;
 
 /*
-* Runs every day (Monday through Sunday)
-* at 9:00:00 AM.
+* Runs every 10 minutes starting at 9 AM and continuing through the 2 PM hour (till 3:00)
 */
-// const START_TIME = '00 00 9 * 10-4 0-6';
-const START_TIME = '00 34 18 * * 0-6';
-/*
-* stops every day (Monday through Sunday)
-* at 4:00:00 PM.
-*/
-const STOP_TIME = '00 00 16 * 10-4 0-6'
+const START_TIME = '00 */05 9-14 * * *';
 
-let job = new cron(START_TIME, function() {
-		// 10 minute interval
-		// const INTERVAL = 600000;
-		const INTERVAL = 10000;
-		setInterval(function() {
-		    // crawl the site
-			crawler.crawl();
-		}, INTERVAL);
-  	}, function () {
-		/* This function is executed when the job stops */
-  	},
-    true, /* Start the job right now */
-    'America/Los_Angeles' /* Time zone of this job. */
-);
+let job = new cron({
+    cronTime: START_TIME,
+    onTick: function() {
+    	crawler.crawl();
+    },
+    start: false,
+    timeZone: 'America/Los_Angeles'
+});
 
-let stop = new cron(STOP_TIME, function() {
-		/*
-		* Runs every day (Monday through Sunday)
-		* at 9:00:00 AM.
-		*/
-		job.stop();
-    }, function () {
-		/* This function is executed when the job stops */
-  	},
-    true, /* Start the job right now */
-    'America/Los_Angeles' /* Time zone of this job. */
-);
+job.start();
