@@ -10,8 +10,8 @@ const { Connector } = require('../database');
 
 const NEXMO_API_KEY = fs.readFileSync('/run/secrets/nexmo-key', 'utf-8');
 const NEXMO_API_SECRET = fs.readFileSync('/run/secrets/nexmo-secret', 'utf-8');
-const NEXMO_OPTIONS = { debug: true };
-const NEXMO_FROM = '13027224120';
+const NEXMO_OPTIONS = { debug: false };
+const NEXMO_FROM = '15412490080';
 
 const STATUS_MAP = {
   'icon-status-closed' : 'closed',
@@ -25,9 +25,9 @@ var redisClient = redis.createClient('6379', 'redis');
 redisClient.on('error', (error) => {
   console.log('error connecting to the redis client');
 });
-// redisClient.flushdb( (err, succeeded) => {
-//   console.log('redis mem flush'); // will be true if successfull
-// });
+redisClient.flushdb( (err, succeeded) => {
+  console.log('redis mem flush'); // will be true if successfull
+});
 
 let nexmo = new Nexmo({
   apiKey: NEXMO_API_KEY,
@@ -103,8 +103,12 @@ function gnartify(date, previousStatus, lifts){
         let dbo = db.db(connection.database);
         const collection = dbo.collection('alerts');
         collection.find({ date: moment().format('MMDDYYYY') }).toArray( (err, alerts) => {
-          alerts.forEach( alert => {
-            sendMessage(alert, gnartification);
+          alerts.forEach( (alert, index) => {
+            (function(alert) {
+              setTimeout(function(){
+                sendMessage(alert, gnartification);
+              }, 5000 * index);
+            }(alert, index));
           })
           db.close();
         });
@@ -115,6 +119,7 @@ function gnartify(date, previousStatus, lifts){
 }
 
 function sendMessage(alert, gnartification){
+  console.log(`sending alert to : ${alert.number}`);
   let message = 'New Gnartification\n\n';
   gnartification.forEach( gnar => {
     message += `${gnar.lift.charAt(0).toUpperCase()}${gnar.lift.slice(1)}\n`;

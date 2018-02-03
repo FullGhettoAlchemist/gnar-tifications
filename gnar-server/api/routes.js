@@ -102,9 +102,7 @@ router.get('/alerts/today', (req, res) => {
 });
 
 
-// collection.remove({}, (err, removed) => {
-//     res.send(removed);
-// });
+// UPDATE EXAMPLE
 
 // MongoClient.connect(url, function(err, db) {
 //   if (err) throw err;
@@ -141,6 +139,5 @@ router.post('/alerts', (req, res) => {
             });
         });
 });
-
 
 module.exports = router;

@@ -35,10 +35,10 @@ services:
 
 secrets:
   nexmo-key:
-    file: /gnar_conf/.secrets/NEXMO_KEY
+    file: /gnar_conf/.secrets/NEXMO_KEY.txt
   nexmo-secret:
-    file: /gnar_conf/.secrets/NEXMO_SECRET
+    file: /gnar_conf/.secrets/NEXMO_SECRET.txt
   mongo-user:
-    file: /gnar_conf/.secrets/MONGO_USER
+    file: /gnar_conf/.secrets/MONGO_USER.txt
   mongo-password:
-    file: /gnar_conf/.secrets/MONGO_PASSWORD
+    file: /gnar_conf/.secrets/MONGO_PASSWORD.txt
