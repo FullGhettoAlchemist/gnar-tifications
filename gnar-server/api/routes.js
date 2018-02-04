@@ -12,6 +12,7 @@ router.get('/', (req, res) => {
         .then( (db) => {
             res.send('api works, database connected =D');
         }, (err) => {
+            console.log(err);
             res.send('api works, database failed to connect =(');
         });  
 });
@@ -118,6 +119,7 @@ router.get('/alerts/today', (req, res) => {
 
 /* Create an alert. */
 router.post('/alerts', (req, res) => {
+    console.log(req.body);
     let number = req.body.number;
     let connection = new Connector();
     connection.connect()
