@@ -19,22 +19,23 @@ router.get('/', (req, res) => {
 
 /* GET all users. */
 router.get('/users', (req, res) => {
-    let connection = new Connector();
-    connection.connect()
-        .then( (db) => {
-            let dbo = db.db(connection.database);
-            const collection = dbo.collection('users');
-            collection.find({}).toArray( (err, items) => {
-                res.send(items);
-                db.close();
-            });
+    console.log(req);
+    // let connection = new Connector();
+    // connection.connect()
+    //     .then( (db) => {
+    //         let dbo = db.db(connection.database);
+    //         const collection = dbo.collection('users');
+    //         collection.find({}).toArray( (err, items) => {
+    //             res.send(items);
+    //             db.close();
+    //         });
             
-        }, (err) => {
-            res.send({
-                message : 'Failure',
-                error   : err
-            });
-        });
+    //     }, (err) => {
+    //         res.send({
+    //             message : 'Failure',
+    //             error   : err
+    //         });
+    //     });
 });
 
 
