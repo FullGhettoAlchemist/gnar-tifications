@@ -40,28 +40,29 @@ router.get('/users', (req, res) => {
 
 /* Create a user. */
 router.post('/users', (req, res) => {
-	let number = req.body.number;
-    let name = req.body.name;
-    let email = req.body.email;
-    let connection = new Connector();
-    connection.connect()
-        .then( (db) => {
-            let dbo = db.db(connection.database);
-            let user = new User(name,number,email);
-            dbo.collection("users").insertOne(user, (err, msg) => {
-                if (err){
-                    res.send(err);
-                }else{
-                    res.send(msg);
-                }
-                db.close();
-            });
-        }, (err) => {
-            res.send({
-                message : 'Failure',
-                error   : err
-            });
-        });
+    console.log(req.body);
+	// let number = req.body.number;
+ //    let name = req.body.name;
+ //    let email = req.body.email;
+ //    let connection = new Connector();
+ //    connection.connect()
+ //        .then( (db) => {
+ //            let dbo = db.db(connection.database);
+ //            let user = new User(name,number,email);
+ //            dbo.collection("users").insertOne(user, (err, msg) => {
+ //                if (err){
+ //                    res.send(err);
+ //                }else{
+ //                    res.send(msg);
+ //                }
+ //                db.close();
+ //            });
+ //        }, (err) => {
+ //            res.send({
+ //                message : 'Failure',
+ //                error   : err
+ //            });
+ //        });
 });
 
 /* GET all alerts. */
