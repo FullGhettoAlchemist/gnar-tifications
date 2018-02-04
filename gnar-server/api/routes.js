@@ -119,8 +119,8 @@ router.get('/alerts/today', (req, res) => {
 
 /* Create an alert. */
 router.post('/alerts', (req, res) => {
-    console.log(req.body);
-    let number = req.body.number;
+    // todo check to see if 'gnar' is anywhere in req.body.text
+    let number = req.body.msisdn;
     let connection = new Connector();
     connection.connect()
         .then( (db) => {
