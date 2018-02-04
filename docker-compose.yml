@@ -18,11 +18,11 @@ services:
     build: gnar-server # specify the directory of the Dockerfile
     volumes:
       - ./gnar-server:/usr/src/app
-    secrets:
-      - nexmo-key
-      - nexmo-secret
-      - mongo-user
-      - mongo-password
+    # secrets:
+    #   - nexmo-key
+    #   - nexmo-secret
+    #   - mongo-user
+    #   - mongo-password
     ports:
       - "3000:3000" #specify ports forewarding
     links:
@@ -33,12 +33,12 @@ services:
     ports:
         - "6379:6379" # specify port forewarding
 
-secrets:
-  nexmo-key:
-    file: /gnar_conf/.secrets/NEXMO_KEY.txt
-  nexmo-secret:
-    file: /gnar_conf/.secrets/NEXMO_SECRET.txt
-  mongo-user:
-    file: /gnar_conf/.secrets/MONGO_USER.txt
-  mongo-password:
-    file: /gnar_conf/.secrets/MONGO_PASSWORD.txt
+# secrets:
+#   nexmo-key:
+#     file: /gnar_conf/.secrets/NEXMO_KEY
+#   nexmo-secret:
+#     file: /gnar_conf/.secrets/NEXMO_SECRET
+#   mongo-user:
+#     file: /gnar_conf/.secrets/MONGO_USER
+#   mongo-password:
+#     file: /gnar_conf/.secrets/MONGO_PASSWORD
