@@ -12,7 +12,7 @@ const START_TIME = '00 */05 9-14 * * *';
 let job = new cron({
     cronTime: START_TIME,
     onTick: function() {
-    	crawler.crawl();
+    	crawler.init();
     },
     start: false,
     timeZone: 'America/Los_Angeles'

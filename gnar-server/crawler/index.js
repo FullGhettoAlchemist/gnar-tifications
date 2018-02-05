@@ -25,18 +25,36 @@ const STATUS_MAP = {
 // todo make use of redis for storing lift states
 var redisClient = redis.createClient('6379', 'redis');
 redisClient.on('error', (error) => {
-  console.log('error connecting to the redis client');
+  console.log(error);
 });
-redisClient.flushdb( (err, succeeded) => {
-  console.log('redis mem flush'); // will be true if successfull
-});
+// redisClient.flushdb( (err, succeeded) => {
+//   console.log('redis mem flush'); // will be true if successfull
+// });
 
 let nexmo = new Nexmo({
   apiKey: NEXMO_API_KEY,
   apiSecret: NEXMO_API_SECRET
 }, NEXMO_OPTIONS);
 
-module.exports.crawl = function(){
+module.exports.init = function(){
+  let connection = new Connector();
+  connection.connect()
+    .then( (db) => {
+      let dbo = db.db(connection.database);
+      const collection = dbo.collection('alerts');
+      collection.find({ date: moment().format('MMDDYYYY') }).toArray( (err, alerts) => {
+        if(alerts.length > 0){
+          crawl();
+        }
+        db.close();
+      });
+    }, (err) => {
+      console.log(err);
+      return;
+    });
+}
+
+function crawl(){
   request({
     uri: "https://www.mtbachelor.com/conditions-report/",
   }, (error, response, body) => {
