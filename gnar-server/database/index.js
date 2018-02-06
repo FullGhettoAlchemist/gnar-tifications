@@ -5,8 +5,6 @@ const MongoClient = require('mongodb').MongoClient;
 
 const MONGO_USER = fs.readFileSync('/run/secrets/mongo-user', 'utf-8').replace(/(\r\n|\n|\r)/gm,"");
 const MONGO_PASSWORD = encodeURIComponent(fs.readFileSync('/run/secrets/mongo-password', 'utf-8').replace(/(\r\n|\n|\r)/gm,""));
-// const MONGO_USER = 'locdawg';
-// const MONGO_PASSWORD = encodeURIComponent('gi14QeS9i7IW$0f');
 
 class Connector {
 	constructor(){
