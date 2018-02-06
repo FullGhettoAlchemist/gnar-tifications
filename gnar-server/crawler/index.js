@@ -8,10 +8,10 @@ const promise = require("bluebird");
 
 const { Connector } = require('../database');
 
-// const NEXMO_API_KEY = fs.readFileSync('/run/secrets/nexmo-key', 'utf-8');
-// const NEXMO_API_SECRET = fs.readFileSync('/run/secrets/nexmo-secret', 'utf-8');
-const NEXMO_API_KEY = 'a8fd8272';
-const NEXMO_API_SECRET = 'bdadf112caaa9796';
+const NEXMO_API_KEY = fs.readFileSync('/run/secrets/nexmo-key', 'utf-8');
+const NEXMO_API_SECRET = fs.readFileSync('/run/secrets/nexmo-secret', 'utf-8');
+// const NEXMO_API_KEY = 'a8fd8272';
+// const NEXMO_API_SECRET = 'bdadf112caaa9796';
 const NEXMO_OPTIONS = { debug: false };
 const NEXMO_FROM = '15412490080';
 
