@@ -6,7 +6,7 @@ const cheerio = require("cheerio");
 const Nexmo = require('nexmo');
 const promise = require("bluebird");
 
-const { Connector } = require('../database');
+const { Users, Alerts } = require('../database');
 
 const NEXMO_API_KEY = fs.readFileSync('/run/secrets/nexmo-key', 'utf-8');
 const NEXMO_API_SECRET = fs.readFileSync('/run/secrets/nexmo-secret', 'utf-8');
@@ -35,24 +35,20 @@ let nexmo = new Nexmo({
 }, NEXMO_OPTIONS);
 
 module.exports.init = function(){
-  let connection = new Connector();
-  connection.connect()
-    .then( (db) => {
-      let dbo = db.db(connection.database);
-      const collection = dbo.collection('alerts');
-      collection.find({ date: moment().format('MMDDYYYY') }).toArray( (err, alerts) => {
-        if(alerts.length > 0){
-          crawl();
-        }
-        db.close();
-      });
-    }, (err) => {
-      console.log(err);
-      return;
-    });
+    let alerts = new Alerts();
+    let query = { date: moment().format('MMDDYYYY') };
+    alerts.getAlerts(query)
+        .then( alerts => {
+            if(alerts.length > 0){
+                crawl(alerts);
+            }
+        }, err => {
+            console.log(err);
+            return;
+        });
 }
 
-function crawl(){
+function crawl(alerts){
   request({
     uri: "https://www.mtbachelor.com/conditions-report/",
   }, (error, response, body) => {
@@ -79,18 +75,18 @@ function crawl(){
     statuses.push( getRedisVal(date, northwest.status, 'northwest') );
     statuses.push( getRedisVal(date, outback.status, 'outback') );
     promise.all(statuses).then( (vals) => {
-      gnartify(date, vals, data);
+      gnartify(date, vals, data, alerts);
     });
   });
 }
 
-function getRedisVal(date, status, lift){
-  const KEY = `${lift}_${date}`;
+function getRedisVal(date, status, name_lift){
+  const KEY = `${name_lift}_${date}`;
   return new Promise( (resolve, reject) => {
     redisClient.get(KEY, (err, val) => {
       redisClient.set(KEY, status);
       if(err){ reject(err); }
-      else{ resolve({lift:lift, status:val}); }
+      else{ resolve({name_lift:name_lift, status:val}); }
     });
   });
 }
@@ -103,48 +99,52 @@ function getLift($, lifts, liftIndex){
   };
 }
 
-function gnartify(date, previousStatus, lifts){
-  let gnartification = [];
-  previousStatus.forEach( lift => {
-    if( !lift.status ){
-      gnartification.push({lift: lift.lift, data:lifts[lift.lift]});
-    }
-    if( lift.status && lift.status !== lifts[lift.lift].status){
-      gnartification.push({lift: lift.lift, data:lifts[lift.lift]});
+function gnartify(date, previousData, newData, alerts){
+  let updates = [];
+  let inital = [];
+  previousData.forEach( lift => {
+    inital.push({name_lift: lift.name_lift, data:newData[lift.name_lift]});
+    if( lift.status && lift.status !== newData[lift.name_lift].status){
+      updates.push({name_lift: lift.name_lift, data:newData[lift.name_lift]});
     }
   });
 
-  if( gnartification.length > 0 ){
-    let connection = new Connector();
-    connection.connect()
-      .then( (db) => {
-        let dbo = db.db(connection.database);
-        const collection = dbo.collection('alerts');
-        collection.find({ date: moment().format('MMDDYYYY') }).toArray( (err, alerts) => {
-          alerts.forEach( (alert, index) => {
-            (function(alert) {
-              setTimeout(function(){
-                sendMessage(alert, gnartification);
-              }, 5000 * index);
-            }(alert, index));
-          })
-          db.close();
-        });
-      }, (err) => {
-        console.log(err);
-      });
-  }
+  alerts.forEach( (alert, index) => {
+    (function(alert) {
+      setTimeout(function(){
+        if( !alert.initial ){
+          sendMessage(alert, inital);
+          updateAlertInitialized(alert);
+        }
+        if( alert.initial && updates.length > 0 ){
+          sendMessage(alert, updates);
+        }
+      }, 5000 * index);
+    }(alert, index));
+  });
 }
 
 function sendMessage(alert, gnartification){
   console.log(`sending alert to : ${alert.number}`);
+  return; // todo remove this so messages can send
   let message = 'New Gnartification\n\n';
   gnartification.forEach( gnar => {
-    message += `${gnar.lift.charAt(0).toUpperCase()}${gnar.lift.slice(1)}\n`;
+    message += `${gnar.name_lift.charAt(0).toUpperCase()}${gnar.name_lift.slice(1)}\n`;
     message += `Status: ${STATUS_MAP[gnar.data.status]}\n`;
     message += `Details: ${gnar.data.details}\n\n`;
   });
   nexmo.message.sendSms(NEXMO_FROM, alert.number, message, (error, response) => {
     if(error) { console.log(error); }
   });
+}
+
+function updateAlertInitialized(alert){
+    let alerts = new Alerts();
+    let update = { "initial" : true };
+    alerts.updateAlerts(alert, update)
+        .then( msg => {
+            // chill
+        }, err => {
+            console.log(err);
+        });
 }
