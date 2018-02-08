@@ -125,8 +125,6 @@ function gnartify(date, previousData, newData, alerts){
 }
 
 function sendMessage(alert, gnartification){
-  console.log(`sending alert to : ${alert.number}`);
-  return; // todo remove this so messages can send
   let message = 'New Gnartification\n\n';
   gnartification.forEach( gnar => {
     message += `${gnar.name_lift.charAt(0).toUpperCase()}${gnar.name_lift.slice(1)}\n`;
