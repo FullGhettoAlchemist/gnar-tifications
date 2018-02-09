@@ -31,7 +31,7 @@ router.get('/users', (req, res) => {
 
 /* CREATE a user. */
 router.post('/users', (req, res) => {
-    let number = req.body.number;
+    let number = `${'1'}req.body.number`;
     let name = req.body.name;
     let email = req.body.email;
     let users = new Users();
