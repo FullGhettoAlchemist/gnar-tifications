@@ -46,7 +46,7 @@ class Users {
 
 	}
 
-	deleteUsers(){
+	deleteUsers(query){
 		return new Promise( (resolve, reject) => {
 			let connection = new Connector();
 		    connection.connect()
