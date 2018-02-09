@@ -4,6 +4,7 @@ const express = require('express');
 const router = express.Router();
 // Import internal dependencies
 const { Connector, Users, Alerts } = require('../database');
+const { SMS } = require('../sms');
 
 /* GET api listing. */
 router.get('/', (req, res) => {
@@ -34,10 +35,15 @@ router.post('/users', (req, res) => {
     let number = `${'1'}${req.body.number}`;
     let name = req.body.name;
     let email = req.body.email;
+    let msg = `
+        Welcome to Gnartify!\n\n
+        Text 'gnar' to this number any day you're up at Bachelor to get instant lift status alerts for Summit, Outback, and Northwest.
+    `;
     let users = new Users();
     users.createUsers(name, number, email)
         .then( packet => {
             res.send(`inserted user ${name}`);
+            SMS.send(number, msg);
         }, err => {
             res.send({ message : 'Failure', error : err });
         });

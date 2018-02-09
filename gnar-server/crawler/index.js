@@ -1,17 +1,11 @@
 const request = require("request");
-const fs = require('fs');
 const redis = require('redis');
 const moment = require('moment');
 const cheerio = require("cheerio");
-const Nexmo = require('nexmo');
 const promise = require("bluebird");
 
 const { Users, Alerts } = require('../database');
-
-const NEXMO_API_KEY = fs.readFileSync('/run/secrets/nexmo-key', 'utf-8');
-const NEXMO_API_SECRET = fs.readFileSync('/run/secrets/nexmo-secret', 'utf-8');
-const NEXMO_OPTIONS = { debug: false };
-const NEXMO_FROM = '15412490080';
+const { SMS } = require('../sms');
 
 const STATUS_MAP = {
   'icon-status-closed' : 'closed',
@@ -28,11 +22,6 @@ redisClient.on('error', (error) => {
 // redisClient.flushdb( (err, succeeded) => {
 //   console.log('redis mem flush'); // will be true if successfull
 // });
-
-let nexmo = new Nexmo({
-  apiKey: NEXMO_API_KEY,
-  apiSecret: NEXMO_API_SECRET
-}, NEXMO_OPTIONS);
 
 module.exports.init = function(){
     let alerts = new Alerts();
@@ -131,9 +120,7 @@ function sendMessage(alert, gnartification){
     message += `Status: ${STATUS_MAP[gnar.data.status]}\n`;
     message += `Details: ${gnar.data.details}\n\n`;
   });
-  nexmo.message.sendSms(NEXMO_FROM, alert.number, message, (error, response) => {
-    if(error) { console.log(error); }
-  });
+  SMS.send(alert.number, message);
 }
 
 function updateAlertInitialized(alert){
