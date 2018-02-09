@@ -35,9 +35,21 @@ router.post('/users', (req, res) => {
     let name = req.body.name;
     let email = req.body.email;
     let users = new Users();
-    users.createUsers(number, name, email)
+    users.createUsers(name, number, email)
         .then( packet => {
             res.send(`inserted user ${name}`);
+        }, err => {
+            res.send({ message : 'Failure', error : err });
+        });
+});
+
+/* DELETE all users */
+router.delete('/users', (req, res) => {
+    let query = {};
+    let users = new Users();
+    users.deleteUsers(query)
+        .then( packet => {
+            res.send(packet);
         }, err => {
             res.send({ message : 'Failure', error : err });
         });
@@ -66,7 +78,7 @@ router.get('/alerts/today', (req, res) => {
         });
 });
 
-/* Create an alert. */
+/* CREEATE an alert. */
 router.post('/alerts', (req, res) => {
     // todo check to see if 'gnar' is anywhere in req.body.text
     let number = req.body.msisdn;
@@ -74,6 +86,17 @@ router.post('/alerts', (req, res) => {
     alerts.createAlerts(number)
         .then( packet => {
             res.send(`inserted alert ${number}`);
+        }, err => {
+            res.send({ message : 'Failure', error : err });
+        });
+});
+/* DELETE alert for today */
+router.delete('/alerts/today', (req, res) => {
+    let query = { date: moment().format('MMDDYYYY') };
+    let alerts = new Alerts();
+    alerts.deleteAlerts(query)
+        .then( packet => {
+            res.send(packet);
         }, err => {
             res.send({ message : 'Failure', error : err });
         });

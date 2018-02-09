@@ -47,7 +47,19 @@ class Users {
 	}
 
 	deleteUsers(){
-		
+		return new Promise( (resolve, reject) => {
+			let connection = new Connector();
+		    connection.connect()
+		        .then( db => {
+		            const collection = db.db(connection.database).collection(this.collection);
+		            collection.remove(query, (err, msg) => {
+		            	err ? reject(err) : resolve(msg);
+		                db.close();
+		            });
+		        }, err => {
+		            reject(err);
+		        });
+	    });
 	}
 }
 
