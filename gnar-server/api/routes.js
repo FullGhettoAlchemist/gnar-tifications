@@ -32,7 +32,7 @@ router.get('/users', (req, res) => {
 
 /* CREATE a user. */
 router.post('/users', (req, res) => {
-    let number = `${'1'}${req.body.number}`;
+    let number = `${'1'}${req.body.number}`; //TODO generate the company code a little more reliably
     let name = req.body.name;
     let email = req.body.email;
     let msg = `
@@ -40,13 +40,13 @@ router.post('/users', (req, res) => {
         Text 'gnar' to this number any day you're up at Bachelor to get instant lift status alerts for Summit, Outback, and Northwest.
     `;
     SMS.send(number, msg);
-    let users = new Users();
-    users.createUsers(name, number, email)
-        .then( packet => {
-            res.send(`inserted user ${name}`);
-        }, err => {
-            res.send({ message : 'Failure', error : err });
-        });
+    // let users = new Users();
+    // users.createUsers(name, number, email)
+    //     .then( packet => {
+    //         res.send(`inserted user ${name}`);
+    //     }, err => {
+    //         res.send({ message : 'Failure', error : err });
+    //     });
 });
 
 /* DELETE all users */
