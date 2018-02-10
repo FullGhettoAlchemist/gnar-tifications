@@ -16,6 +16,7 @@ class SMS {
 	}
 
 	send(to_number, msg){
+		console.log(`Sending message to ${to_number}`);
 		nexmo.message.sendSms(this.gnar_number, to_number, msg, (error, response) => {
 			if(error) { console.log(error); }
 		});
