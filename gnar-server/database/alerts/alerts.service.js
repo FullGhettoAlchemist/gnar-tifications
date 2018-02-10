@@ -1,4 +1,4 @@
-const { Connector } = require('../connector');
+const { ConnectionService } = require('../connector');
 const { AlertModel } = require('./alert.model');
 
 class Alerts {
@@ -8,10 +8,9 @@ class Alerts {
 
 	getAlerts(query){
 		return new Promise( (resolve, reject) => {
-			let connection = new Connector();
-		    connection.connect()
+		    ConnectionService.connect()
 		        .then( db => {
-		            const collection = db.db(connection.database).collection(this.collection);
+		            const collection = db.db(ConnectionService.database).collection(this.collection);
 		            collection.find(query).toArray( (err, items) => {
 		            	err ? reject(err) : resolve(items);
 		                db.close();
@@ -26,10 +25,9 @@ class Alerts {
 		let alert = new AlertModel(number);
 		return new Promise( (resolve, reject) => {
 			if(!number){ reject('ERROR! No Number Provided. Alert not inserted'); }
-			let connection = new Connector();
-		    connection.connect()
+		    ConnectionService.connect()
 		        .then( db => {
-		            const collection = db.db(connection.database).collection(this.collection);
+		            const collection = db.db(ConnectionService.database).collection(this.collection);
 		            collection.insertOne(alert, (err, items) => {
 		            	err ? reject(err) : resolve(items);
 		                db.close();
@@ -42,10 +40,9 @@ class Alerts {
 
 	updateAlerts(alert, update){
 		return new Promise( (resolve, reject) => {
-			let connection = new Connector();
-		    connection.connect()
+		    ConnectionService.connect()
 		        .then( db => {
-		            const collection = db.db(connection.database).collection(this.collection);
+		            const collection = db.db(ConnectionService.database).collection(this.collection);
 		            collection.updateOne(alert, { $set: update }, (err, msg) => {
 		            	err ? reject(err) : resolve(msg);
 		                db.close();
@@ -59,9 +56,9 @@ class Alerts {
 	deleteAlerts(query){
 		return new Promise( (resolve, reject) => {
 			let connection = new Connector();
-		    connection.connect()
+		    ConnectionService.connect()
 		        .then( db => {
-		            const collection = db.db(connection.database).collection(this.collection);
+		            const collection = db.db(ConnectionService.database).collection(this.collection);
 		            collection.remove(query, (err, msg) => {
 		            	err ? reject(err) : resolve(msg);
 		                db.close();
@@ -72,5 +69,5 @@ class Alerts {
 	    });
 	}
 }
-
-module.exports = { Alerts };
+const AlertsService = new Alerts();
+module.exports = { AlertsService };

@@ -1,4 +1,4 @@
 const { AlertModel } = require('./alert.model');
-const { Alerts } = require('./alerts');
+const { AlertsService } = require('./alerts.service');
 
-module.exports = { AlertModel, Alerts };
+module.exports = { AlertModel, AlertsService };

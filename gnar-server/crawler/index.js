@@ -4,8 +4,8 @@ const moment = require('moment');
 const cheerio = require("cheerio");
 const promise = require("bluebird");
 
-const { Users, Alerts } = require('../database');
-const { SMS } = require('../sms');
+const { AlertsService } = require('../database');
+const { sms } = require('../sms');
 
 const STATUS_MAP = {
   'icon-status-closed' : 'closed',
@@ -24,9 +24,8 @@ redisClient.on('error', (error) => {
 // });
 
 module.exports.init = function(){
-    let alerts = new Alerts();
     let query = { date: moment().format('MMDDYYYY') };
-    alerts.getAlerts(query)
+    AlertsService.getAlerts(query)
         .then( alerts => {
             if(alerts.length > 0){
                 crawl(alerts);
@@ -120,13 +119,12 @@ function sendMessage(alert, gnartification){
     message += `Status: ${STATUS_MAP[gnar.data.status]}\n`;
     message += `Details: ${gnar.data.details}\n\n`;
   });
-  SMS.send(alert.number, message);
+  sms.send(alert.number, message);
 }
 
 function updateAlertInitialized(alert){
-    let alerts = new Alerts();
     let update = { "initial" : true };
-    alerts.updateAlerts(alert, update)
+    AlertsService.updateAlerts(alert, update)
         .then( msg => {
             // chill
         }, err => {

@@ -3,7 +3,7 @@ const Nexmo = require('nexmo');
 
 const NEXMO_API_KEY = fs.readFileSync('/run/secrets/nexmo-key', 'utf-8');
 const NEXMO_API_SECRET = fs.readFileSync('/run/secrets/nexmo-secret', 'utf-8');
-const NEXMO_OPTIONS = { debug: false };
+const NEXMO_OPTIONS = { debug: true };
 
 class SMS {
 	constructor(){
@@ -15,10 +15,11 @@ class SMS {
 	}
 
 	send(to_number, msg){
+		console.log('sending message');
 		this.nexmo.message.sendSms(this.gnar_number, to_number, msg, (error, response) => {
 			if(error) { console.log(error); }
 		});
 	}
 }
-
-module.exports = new SMS();
+const sms = new SMS();
+module.exports = { sms };
