@@ -1,4 +1,4 @@
 const { UserModel } = require('./user.model');
-const { Users } = require('./users');
+const { UsersService } = require('./users.service');
 
-module.exports = { UserModel, Users };
+module.exports = { UserModel, UsersService };

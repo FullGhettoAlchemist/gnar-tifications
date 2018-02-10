@@ -24,5 +24,5 @@ class Connector {
 	    })
 	}
 }
-
-module.exports = { Connector };
+const ConnectionService = new Connector();
+module.exports = { ConnectionService };

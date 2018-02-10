@@ -1,4 +1,4 @@
-const { Connector } = require('../connector');
+const { ConnectionService } = require('../connector');
 const { UserModel } = require('./user.model');
 
 class Users {
@@ -11,10 +11,9 @@ class Users {
 	*/
 	getUsers(query){
 		return new Promise( (resolve, reject) => {
-			let connection = new Connector();
-		    connection.connect()
+		    ConnectionService.connect()
 		        .then( db => {
-		            const collection = db.db(connection.database).collection(this.collection);
+		            const collection = db.db(ConnectionService.database).collection(this.collection);
 		            collection.find(query).toArray( (err, items) => {
 		            	err ? reject(err) : resolve(items);
 		                db.close();
@@ -28,10 +27,9 @@ class Users {
 	createUsers(name,number,email){
 		let user = new UserModel(name,number,email);
 		return new Promise( (resolve, reject) => {
-			let connection = new Connector();
-		    connection.connect()
+		    ConnectionService.connect()
 		        .then( db => {
-		            const collection = db.db(connection.database).collection(this.collection);
+		            const collection = db.db(ConnectionService.database).collection(this.collection);
 		            collection.insertOne(user, (err, msg) => {
 		            	err ? reject(err) : resolve(msg);
 		                db.close();
@@ -48,10 +46,9 @@ class Users {
 
 	deleteUsers(query){
 		return new Promise( (resolve, reject) => {
-			let connection = new Connector();
-		    connection.connect()
+		    ConnectionService.connect()
 		        .then( db => {
-		            const collection = db.db(connection.database).collection(this.collection);
+		            const collection = db.db(ConnectionService.database).collection(this.collection);
 		            collection.remove(query, (err, msg) => {
 		            	err ? reject(err) : resolve(msg);
 		                db.close();
@@ -62,5 +59,5 @@ class Users {
 	    });
 	}
 }
-
-module.exports = { Users };
+const UsersService = new Users();
+module.exports = { UsersService };

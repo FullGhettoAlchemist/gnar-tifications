@@ -1,5 +1,5 @@
-const { Connector } = require('./connector');
-const { AlertModel, Alerts } = require('./alerts');
-const { UserModel, Users } = require('./users');
+const { ConnectionService } = require('./connector');
+const { AlertModel, AlertsService } = require('./alerts');
+const { UserModel, UsersService } = require('./users');
 
-module.exports = { Connector, UserModel, AlertModel, Users, Alerts };
+module.exports = { ConnectionService, UserModel, AlertModel, UsersService, AlertsService };

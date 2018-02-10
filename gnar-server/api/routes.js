@@ -3,13 +3,12 @@ const moment = require('moment');
 const express = require('express');
 const router = express.Router();
 // Import internal dependencies
-const { Connector, Users, Alerts } = require('../database');
-const { SMS } = require('../sms');
+const { ConnectionService, UsersService, AlertsService } = require('../database');
+const { sms } = require('../sms');
 
 /* GET api listing. */
 router.get('/', (req, res) => {
-    let connection = new Connector();
-    connection.connect()
+    ConnectionService.connect()
         .then( (db) => {
             res.send('api works, database connected =D');
         }, (err) => {
@@ -20,9 +19,8 @@ router.get('/', (req, res) => {
 
 /* GET all users. */
 router.get('/users', (req, res) => {
-    let users = new Users();
     let query = {};
-    users.getUsers(query)
+    UsersService.getUsers(query)
         .then( packet => {
             res.send(packet);
         }, err => {
@@ -32,16 +30,12 @@ router.get('/users', (req, res) => {
 
 /* CREATE a user. */
 router.post('/users', (req, res) => {
-    let number = `${'1'}${req.body.number}`;
+    let number = `${'1'}${req.body.number}`; //TODO generate the company code a little more reliably
     let name = req.body.name;
     let email = req.body.email;
-    let msg = `
-        Welcome to Gnartify!\n\n
-        Text 'gnar' to this number any day you're up at Bachelor to get instant lift status alerts for Summit, Outback, and Northwest.
-    `;
-    SMS.send(number, msg);
-    let users = new Users();
-    users.createUsers(name, number, email)
+    let msg = `Welcome to Gnartify!\nText 'gnar' to this number any day you're up at Bachelor to get instant lift status alerts for Summit, Outback, and Northwest.`;
+    sms.send(number, msg);
+    UsersService.createUsers(name, number, email)
         .then( packet => {
             res.send(`inserted user ${name}`);
         }, err => {
@@ -52,8 +46,7 @@ router.post('/users', (req, res) => {
 /* DELETE all users */
 router.delete('/users', (req, res) => {
     let query = {};
-    let users = new Users();
-    users.deleteUsers(query)
+    UsersService.deleteUsers(query)
         .then( packet => {
             res.send(packet);
         }, err => {
@@ -63,9 +56,8 @@ router.delete('/users', (req, res) => {
 
 /* GET all alerts. */
 router.get('/alerts', (req, res) => {
-    let alerts = new Alerts();
     let query = {};
-    alerts.getAlerts(query)
+    AlertsService.getAlerts(query)
         .then( packet => {
             res.send(packet);
         }, err => {
@@ -74,9 +66,8 @@ router.get('/alerts', (req, res) => {
 });
 /* GET todays alerts. */
 router.get('/alerts/today', (req, res) => {
-    let alerts = new Alerts();
     let query = { date: moment().format('MMDDYYYY') };
-    alerts.getAlerts(query)
+    AlertsService.getAlerts(query)
         .then( packet => {
             res.send(packet);
         }, err => {
@@ -88,8 +79,7 @@ router.get('/alerts/today', (req, res) => {
 router.post('/alerts', (req, res) => {
     // todo check to see if 'gnar' is anywhere in req.body.text
     let number = req.body.msisdn;
-    let alerts = new Alerts();
-    alerts.createAlerts(number)
+    AlertsService.createAlerts(number)
         .then( packet => {
             res.send(`inserted alert ${number}`);
         }, err => {
@@ -99,8 +89,7 @@ router.post('/alerts', (req, res) => {
 /* DELETE alert for today */
 router.delete('/alerts/today', (req, res) => {
     let query = { date: moment().format('MMDDYYYY') };
-    let alerts = new Alerts();
-    alerts.deleteAlerts(query)
+    AlertsService.deleteAlerts(query)
         .then( packet => {
             res.send(packet);
         }, err => {
