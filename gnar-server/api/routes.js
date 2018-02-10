@@ -39,14 +39,11 @@ router.post('/users', (req, res) => {
         Welcome to Gnartify!\n\n
         Text 'gnar' to this number any day you're up at Bachelor to get instant lift status alerts for Summit, Outback, and Northwest.
     `;
+    SMS.send(number, msg);
     let users = new Users();
     users.createUsers(name, number, email)
         .then( packet => {
             res.send(`inserted user ${name}`);
-            console.log(packet);
-            console.log(number);
-            console.log(msg);
-            SMS.send(number, msg);
         }, err => {
             res.send({ message : 'Failure', error : err });
         });
