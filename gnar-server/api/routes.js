@@ -43,6 +43,9 @@ router.post('/users', (req, res) => {
     users.createUsers(name, number, email)
         .then( packet => {
             res.send(`inserted user ${name}`);
+            console.log(packet);
+            console.log(number);
+            console.log(msg);
             SMS.send(number, msg);
         }, err => {
             res.send({ message : 'Failure', error : err });
