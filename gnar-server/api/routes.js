@@ -30,7 +30,12 @@ router.get('/users', (req, res) => {
 
 /* CREATE a user. */
 router.post('/users', (req, res) => {
-    let number = `${'1'}${req.body.number}`; //TODO generate the company code a little more reliably
+    let digits = sms.extractPhoneNumberDigits(req.body.number);
+    if(!digits){
+        console.log('the entered number was invalid');
+        return;
+    }
+    let number = `${'1'}${digits}`;
     let name = req.body.name;
     let email = req.body.email;
     let msg = `Welcome to Gnartify!\nText 'gnar' to this number any day you're up at Bachelor to get instant lift status alerts for Summit, Outback, and Northwest.`;
