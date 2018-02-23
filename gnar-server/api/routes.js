@@ -1,5 +1,5 @@
 // Import dependencies
-const moment = require('moment');
+const moment = require('moment-timezone');
 const express = require('express');
 const router = express.Router();
 // Import internal dependencies
@@ -80,10 +80,13 @@ router.get('/alerts/today', (req, res) => {
         });
 });
 
-/* CREEATE an alert. */
+/* CREATE an alert. */
 router.post('/alerts', (req, res) => {
+    const NOW_LA_TIMEZONE = moment().tz("America/Los_Angeles").format('H');
+    const number = req.body.msisdn;
+    const msg = ( Number(NOW_LA_TIMEZONE) >= 16 ) ? `You're in!\nYou will receive your initial gnartification when the lifts open at 9:00` : `You're in!\nStandby for your initial gnartification`;
+    sms.send(number, msg);
     // todo check to see if 'gnar' is anywhere in req.body.text
-    let number = req.body.msisdn;
     AlertsService.createAlerts(number)
         .then( packet => {
             res.send(`inserted alert ${number}`);
