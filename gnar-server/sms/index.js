@@ -3,7 +3,7 @@ const Nexmo = require('nexmo');
 
 const NEXMO_API_KEY = fs.readFileSync('/run/secrets/nexmo-key', 'utf-8');
 const NEXMO_API_SECRET = fs.readFileSync('/run/secrets/nexmo-secret', 'utf-8');
-const NEXMO_OPTIONS = { debug: true };
+const NEXMO_OPTIONS = { debug: false };
 
 class SMS {
 	constructor(){
