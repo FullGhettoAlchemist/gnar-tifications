@@ -7,15 +7,15 @@ const { ConnectionService, UsersService, AlertsService } = require('../database'
 const { sms } = require('../sms');
 
 /* GET api listing. */
-router.get('/', (req, res) => {
-    ConnectionService.connect()
-        .then( (db) => {
-            res.send('api works, database connected =D');
-        }, (err) => {
-            console.log(err);
-            res.send('api works, database failed to connect =(');
-        });  
-});
+// router.get('/', (req, res) => {
+//     ConnectionService.connect()
+//         .then( (db) => {
+//             res.send('api works, database connected =D');
+//         }, (err) => {
+//             console.log(err);
+//             res.send('api works, database failed to connect =(');
+//         });  
+// });
 
 /* GET all users. */
 router.get('/users', (req, res) => {

@@ -8,16 +8,10 @@ class Alerts {
 
 	getAlerts(query){
 		return new Promise( (resolve, reject) => {
-		    ConnectionService.connect()
-		        .then( db => {
-		            const collection = db.db(ConnectionService.database).collection(this.collection);
-		            collection.find(query).toArray( (err, items) => {
-		            	err ? reject(err) : resolve(items);
-		                db.close();
-		            });
-		        }, err => {
-		            reject(err);
-		        });
+			const collection = ConnectionService.db.db(ConnectionService.database).collection(this.collection);
+            collection.find(query).toArray( (err, items) => {
+            	err ? reject(err) : resolve(items);
+            });
 	    });
 	}
 
@@ -25,47 +19,28 @@ class Alerts {
 		let alert = new AlertModel(number);
 		return new Promise( (resolve, reject) => {
 			if(!number){ reject('ERROR! No Number Provided. Alert not inserted'); }
-		    ConnectionService.connect()
-		        .then( db => {
-		            const collection = db.db(ConnectionService.database).collection(this.collection);
-		            collection.insertOne(alert, (err, items) => {
-		            	err ? reject(err) : resolve(items);
-		                db.close();
-		            });
-		        }, err => {
-		            reject(err);
-		        });
+			const collection = ConnectionService.db.db(ConnectionService.database).collection(this.collection);
+            collection.insertOne(alert, (err, items) => {
+            	err ? reject(err) : resolve(items);
+            });
 	    });
 	}
 
 	updateAlerts(alert, update){
 		return new Promise( (resolve, reject) => {
-		    ConnectionService.connect()
-		        .then( db => {
-		            const collection = db.db(ConnectionService.database).collection(this.collection);
-		            collection.updateOne(alert, { $set: update }, (err, msg) => {
-		            	err ? reject(err) : resolve(msg);
-		                db.close();
-		            });
-		        }, err => {
-		            reject(err);
-		        });
+			const collection = ConnectionService.db.db(ConnectionService.database).collection(this.collection);
+            collection.updateOne(alert, { $set: update }, (err, msg) => {
+            	err ? reject(err) : resolve(msg);
+            });
 	    });
 	}
 
 	deleteAlerts(query){
 		return new Promise( (resolve, reject) => {
-			let connection = new Connector();
-		    ConnectionService.connect()
-		        .then( db => {
-		            const collection = db.db(ConnectionService.database).collection(this.collection);
-		            collection.remove(query, (err, msg) => {
-		            	err ? reject(err) : resolve(msg);
-		                db.close();
-		            });
-		        }, err => {
-		            reject(err);
-		        });
+			const collection = ConnectionService.db.db(ConnectionService.database).collection(this.collection);
+            collection.remove(query, (err, msg) => {
+            	err ? reject(err) : resolve(msg);
+            });
 	    });
 	}
 }

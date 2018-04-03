@@ -9,6 +9,7 @@ class Connector {
 	constructor(){
 		this.uri = `mongodb://${MONGO_USER}:${MONGO_PASSWORD}@gnarcluster-shard-00-00-3cdig.mongodb.net:27017,gnarcluster-shard-00-01-3cdig.mongodb.net:27017,gnarcluster-shard-00-02-3cdig.mongodb.net:27017/test?ssl=true&replicaSet=GnarCluster-shard-0&authSource=admin`;
 		this.database = 'test';
+		this.db = undefined;
 	}
 
 	connect(){
@@ -18,6 +19,7 @@ class Connector {
 	    		if (err) {
 	                reject(err);
 	            } else {
+	            	this.db = db;
 	                resolve(db);
 	            }
 			});

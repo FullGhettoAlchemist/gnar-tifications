@@ -5,9 +5,9 @@ const api = require('./api');
 const cron = require('cron').CronJob;
 
 /*
-* Runs every 10 minutes starting at 9 AM and continuing through the 2 PM hour (till 3:00)
+* Runs every 10 minutes starting at 8 AM and continuing through the 2 PM hour (till 3:00)
 */
-const START_TIME = '00 */05 9-14 * * *';
+const START_TIME = '00 */05 8-14 * * *';
 
 let job = new cron({
     cronTime: START_TIME,
